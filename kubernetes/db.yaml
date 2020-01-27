@@ -1,0 +1,32 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: phippydb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phippydb # has to match .spec.template.metadata.labels
+  template:
+    metadata:
+      labels:
+        app: phippydb # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+      - name: redis
+        image: cmarasescu/redis
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: phippydb
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
